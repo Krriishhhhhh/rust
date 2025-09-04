@@ -5,4 +5,8 @@ fn main() {
 
     // Var created after 1st commit 
     let w : i64 = 1001010101;
+
+
+    // Var created after created a new branch 
+    let z : u128 = 12434114134;
 }
