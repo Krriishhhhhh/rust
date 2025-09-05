@@ -1,14 +1,15 @@
 
 fn create_string() {
     let s1: String = String ::from("Hello");
-    let s2: String = s1;
+   do_something(&s1); //Basically s1 will remain the owner of hello , but s2 is borrowing the value , this is not a copy , s2 has access to original hello , but it has only borrowed it , not owned it 
 
-    // println!("{}" , s1); Can't be done as we moved the owner 
+   
+}
 
-    println!("{}" , s2); //Will print hello
+fn do_something(s2 :&String){
+    println!("{}" , s2);
 }
 fn main() {
     create_string()
 }
 
-//In this code , at first s1 was the owner of "Hello" in the heap , and then we made s2 as the owner of heap
