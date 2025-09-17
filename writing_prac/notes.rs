@@ -4,4 +4,7 @@ It is a set of rules that the rust follows to manage the memory , mainly clean u
 
 Focus On Ownership , Borro
 
+Lets build yazi from scratch .
 */
+
+
