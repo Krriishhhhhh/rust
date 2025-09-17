@@ -1,25 +1,29 @@
-use std::io::{BufReader, prelude::*};
-use std::net::{TcpListener, TcpStream};
+use std::{
+    fs, io::{BufRead, BufReader, Write}, net::TcpListener
+};
 
 fn main() {
-    let listener: TcpListener = TcpListener::bind("127.0.0.1:7878").unwrap();
+    let listener = TcpListener::bind("127.0.0.1:8080").unwrap();
 
     for stream in listener.incoming() {
-        let stream: std::net::TcpStream = stream.unwrap();
+        let mut stream = stream.unwrap();
 
-        println!("Connection established")
+        println!("{:?}", stream);
+
+        let buf_reader: BufReader<&std::net::TcpStream> = BufReader::new(&stream);
+
+        let http_req: Vec<_> = buf_reader
+            .lines()
+            .map(|result| result.unwrap())
+            .take_while(|line| !line.is_empty())
+            .collect();
+
+        println!("Request : {:?} ", http_req);
+
+        let status_line = "HTTP/1.1 200 OK\r\n\r\n";
+        let contents =fs::read_to_string("res.html").unwrap();
+         let length = contents.len();
+         let response = format!("{status_line}\r\nContent-Length: {length}\r\n\r\n{contents}");
+        stream.write_all(response.as_bytes()).unwrap();
     }
-}
-
-//By defualt function parameters are immutable , we need to make the parameters mutable explicitly
-fn handle_connection(mut stream: TcpStream) {
-    let buf_reader: BufReader<&TcpStream> = BufReader::new(&stream);
-
-    let http_req: Vec<_> = buf_reader
-        .lines()
-        .map(|result| result.unwrap())
-        .take_while(|line| !line.is_empty())
-        .collect();
-
-    println!("Connection Established Successfully")
 }
